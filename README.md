@@ -1,2 +1,1 @@
-# grio
-A place for the memories you don't want to forget
+### A place for the memories you don't want to forget
