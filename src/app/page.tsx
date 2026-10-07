@@ -1,5 +1,6 @@
 import { db } from '@/lib/prisma'
-import { UserForm } from './components/UserForm'
+import { UserForm } from '@/app/components/UserForm'
+import { Topbar } from '@/app/components/Topbar'
 
 export const dynamic = 'force-dynamic'
 
@@ -24,21 +25,8 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-stone-950 text-stone-100 selection:bg-amber-500 selection:text-stone-950">
-      {/* Header / Navbar */}
-      <header className="border-b border-stone-800/80 bg-stone-900/50 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <span className="text-2xl font-serif tracking-wide text-amber-400 font-bold">Griô</span>
-            <span className="text-[10px] uppercase tracking-widest px-2 py-0.5 rounded bg-amber-400/10 text-amber-400 border border-amber-400/20 font-mono">
-              Vault
-            </span>
-          </div>
-          <nav className="text-sm text-stone-400 flex items-center space-x-6 font-mono">
-            <span className="hover:text-amber-400 transition cursor-pointer">Timelines</span>
-            <span className="hover:text-amber-400 transition cursor-pointer">About</span>
-          </nav>
-        </div>
-      </header>
+      {/* Topbar Global com navegação para Sign In / Sign Up */}
+      <Topbar />
 
       <div className="max-w-5xl mx-auto px-6 py-12">
         {/* Hero Banner + Formulário de Cadastro */}
@@ -62,6 +50,7 @@ export default async function Home() {
             <UserForm />
           </div>
         </section>
+
         {/* Timelines Section */}
         <section>
           <div className="flex items-center justify-between mb-8 border-b border-stone-800 pb-4">

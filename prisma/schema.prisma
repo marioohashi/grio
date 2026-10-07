@@ -20,15 +20,20 @@ enum Visibility {
 }
 
 model User {
-  id         String           @id @default(uuid())
-  email      String           @unique
-  name       String
-  timelines  TimelineMember[]
-  memories   Memory[]
-  created_at DateTime         @default(now())
+  id            String           @id @default(uuid())
+  name          String
+  email         String           @unique
+  password      String?          
+  image         String?          
+  created_at    DateTime         @default(now())
+  updated_at    DateTime         @default(now()) @updatedAt // <--- Adicione o @default(now()) aqui
+  timelines     TimelineMember[]
+  memories      Memory[]        
 
-  @@map("users")
+    @@map("users")
+ 
 }
+
 
 model Timeline {
   id          String           @id @default(uuid())
