@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from '@/app/context/LanguageContext'
 import { Topbar } from "./components/Topbar";
+import { Footer } from "@/app/components/Footer"
 import { getSession } from "@/lib/session";
 
 const geistSans = Geist({
@@ -21,6 +22,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
+
   const user = await getSession()
 
   return (
@@ -32,6 +34,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <LanguageProvider>
           <Topbar user={user} />
           {children}
+          <Footer />
         </LanguageProvider>
       </body>
     </html>

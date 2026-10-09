@@ -6,6 +6,14 @@ import { db } from '@/lib/prisma'
 const secret = new TextEncoder().encode(process.env.SESSION_SECRET!)
 const COOKIE = 'session'
 
+export type SessionUser = {
+    id: string
+    name: string
+    email: string
+    image: string | null
+    emailVerified: Date | null
+}
+
 export async function createSession(userId: string) {
     const token = await new SignJWT({ sub: userId })
         .setProtectedHeader({ alg: 'HS256' })

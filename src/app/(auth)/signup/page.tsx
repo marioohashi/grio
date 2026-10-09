@@ -94,10 +94,8 @@ export default function SignupPage() {
                     <p className="text-xs text-stone-400 font-mono">Comece a preservar suas memórias com segurança.</p>
                 </div>
 
-                {/* Botão de Login com Google */}
-                <button
-                    type="button"
-                    onClick={() => alert('Integração com Google Auth pronta para ser acoplada via NextAuth/Auth.js')}
+                <a
+                    href="/api/auth/google"
                     className="w-full mb-6 py-3 px-4 rounded-xl bg-stone-950 border border-stone-800 hover:border-stone-700 text-stone-200 text-sm font-medium flex items-center justify-center gap-3 transition"
                 >
                     <svg className="w-4 h-4" viewBox="0 0 24 24">
@@ -106,8 +104,8 @@ export default function SignupPage() {
                         <path fill="#FBBC05" d="M5.6 14.7c-.2-.7-.4-1.5-.4-2.7s.2-2 .4-2.7L1.9 6.4C.7 8.8 0 11.3 0 14s.7 5.2 1.9 7.6l3.7-2.9z" />
                         <path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16c1.8 3.8 5.6 7 10.1 7z" />
                     </svg>
-                    Continuar com o Google
-                </button>
+                    Entrar com o Google
+                </a>
 
                 <div className="flex items-center my-6">
                     <div className="flex-grow border-t border-stone-800"></div>
