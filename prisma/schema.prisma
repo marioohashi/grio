@@ -68,9 +68,15 @@ model Memory {
   title       String
   description String?  @db.Text
   date        DateTime
-  media_urls  String[] // URLs de mídias WebP compactadas
-  mood        String?  // Ex: "HAPPY", "ROMANTIC", "NOSTALGIC"
+  media_urls  String[] 
+  mood        String?  
   tags        String[]
+  location_name     String?   
+  location_address  String?   
+  location_lat      Float?    
+  location_lng      Float?    
+  location_place_id String?   
+
   timeline    Timeline @relation(fields: [timeline_id], references: [id], onDelete: Cascade)
   author      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
   created_at  DateTime @default(now())

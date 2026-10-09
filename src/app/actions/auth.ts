@@ -48,6 +48,8 @@ export async function handleLogin(
         password: formData.get('password'),
     })
 
+    console.log("login")
+
     if (!result.success) {
         return { status: 'error', message: 'Dados inválidos.' }
     }
@@ -110,11 +112,11 @@ export async function handleSignup(
     await db.user.create({
         data: { name, email, password: hashedPassword },
     })
+    console.log("create")
 
     const token = randomBytes(32).toString('hex')
     const expires = new Date(Date.now() + 1000 * 60 * 60 * 24) // 24h
 
-    // limpa tokens antigos do mesmo e-mail e cria o novo
     await db.verificationToken.deleteMany({ where: { identifier: email } })
     await db.verificationToken.create({
         data: { identifier: email, token, expires },

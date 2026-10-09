@@ -1,8 +1,15 @@
-export default function DashboardPage() {
-    return (
-        <p className="text-stone-400 text-lg leading-relaxed">
-            Bem-vindo ao seu painel de dashboard!
-        </p>
-    )
+import { getSession } from '@/lib/session'
+import { redirect } from 'next/navigation'
+import { DashboardContent } from './DashboardContent'
 
+export const dynamic = 'force-dynamic'
+
+export default async function DashboardPage() {
+    const user = await getSession()
+
+    if (!user) {
+        redirect('/login')
+    }
+
+    return <DashboardContent user={user} />
 }
