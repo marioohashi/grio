@@ -127,7 +127,9 @@ export default function SignupPage() {
                             className="w-full bg-stone-950 border border-stone-800 rounded-xl px-4 py-3 text-stone-100 text-sm focus:outline-none focus:border-amber-400 transition"
                             required
                         />
-                        {state?.errors?.name && <p className="text-xs text-rose-400 mt-1 font-mono">{state.errors.name[0]}</p>}
+                        {/* {state?.errors?.name && <p className="text-xs text-rose-400 mt-1 font-mono">{state.errors.name[0]}</p>} */}
+                        {state?.status === 'error' && !state?.errors?.name && <p className="text-xs text-rose-400 mt-1 font-mono">{state.message}</p>}
+
                     </div>
 
                     <div>
@@ -141,7 +143,7 @@ export default function SignupPage() {
                             className="w-full bg-stone-950 border border-stone-800 rounded-xl px-4 py-3 text-stone-100 text-sm focus:outline-none focus:border-amber-400 transition"
                             required
                         />
-                        {state?.errors?.email && <p className="text-xs text-rose-400 mt-1 font-mono">{state.errors.email[0]}</p>}
+                        {state?.status === 'error' && !state?.errors?.email && <p className="text-xs text-rose-400 mt-1 font-mono">{state.message}</p>}
                     </div>
 
                     <div>
@@ -189,13 +191,14 @@ export default function SignupPage() {
                         )}
 
                         {/* Erros do servidor só quando o cliente não está mostrando nada */}
-                        {password.length === 0 && state?.errors?.password && (
-                            <div className="mt-2 space-y-1">
-                                {state.errors.password.map((err: string, i: number) => (
-                                    <p key={i} className="text-xs text-rose-400 font-mono">{err}</p>
-                                ))}
-                            </div>
-                        )}
+                        {state?.status === 'error' && state.errors?.password && password.length === 0
+                            && (
+                                <div className="mt-2 space-y-1">
+                                    {state.errors.password.map((err: string, i: number) => (
+                                        <p key={i} className="text-xs text-rose-400 font-mono">{err}</p>
+                                    ))}
+                                </div>
+                            )}
                     </div>
 
                     {/* Campo de Confirmação de Senha */}
@@ -241,7 +244,7 @@ export default function SignupPage() {
                         </div>
                     )}
 
-                    {state?.message && <p className="text-xs text-rose-400 font-mono">{state.message}</p>}
+                    {state?.status === 'error' && state?.message && <p className="text-xs text-rose-400 font-mono">{state.message}</p>}
 
                     <button
                         type="submit"

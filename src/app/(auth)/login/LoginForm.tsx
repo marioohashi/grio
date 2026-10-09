@@ -36,7 +36,6 @@ export default function LoginForm({
                     <p className="text-xs text-stone-400 font-mono">Acesse suas memórias e timelines colaborativas.</p>
                 </div>
 
-                {/* Botão Google (ainda fake — trocar por signIn('google') quando plugar NextAuth) */}
                 <button
                     type="button"
                     onClick={() => alert('Autenticação Google ainda não implementada.')}

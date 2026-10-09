@@ -42,7 +42,7 @@ export type SignupState =
 export async function handleLogin(
     prev: LoginState,
     formData: FormData
-): Promise<LoginState | void> {
+): Promise<LoginState> {
     const result = loginSchema.safeParse({
         email: formData.get('email'),
         password: formData.get('password'),
@@ -51,18 +51,21 @@ export async function handleLogin(
     if (!result.success) {
         return { status: 'error', message: 'Dados inválidos.' }
     }
+    const INVALID_CREDENTIALS = 'E-mail ou senha incorretos.'
 
     const { email, password } = result.data
 
     const user = await db.user.findUnique({ where: { email } })
 
-    if (!user) {
-        return { status: 'error', message: 'E-mail ou senha incorretos.' }
+    if (!user || !user.password) {
+        return { status: 'error', message: INVALID_CREDENTIALS }
     }
 
+
     const passwordOk = await compare(password, user.password)
+
     if (!passwordOk) {
-        return { status: 'error', message: 'E-mail ou senha incorretos.' }
+        return { status: 'error', message: INVALID_CREDENTIALS }
     }
 
     if (!user.emailVerified) {
