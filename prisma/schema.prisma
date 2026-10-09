@@ -23,7 +23,8 @@ model User {
   id            String           @id @default(uuid())
   name          String
   email         String           @unique
-  password      String?          
+  password      String?         
+  emailVerified DateTime?
   image         String?          
   created_at    DateTime         @default(now())
   updated_at    DateTime         @default(now()) @updatedAt // <--- Adicione o @default(now()) aqui
@@ -75,4 +76,12 @@ model Memory {
   created_at  DateTime @default(now())
 
   @@map("memories")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }

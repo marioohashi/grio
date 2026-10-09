@@ -1,21 +1,44 @@
 'use client'
 
+import { useActionState } from 'react'
+import { handleLogin, type LoginState } from '@/app/actions/auth'
 import Link from 'next/link'
 
-export default function LoginPage() {
+export default function LoginForm({
+    verified,
+    error,
+}: {
+    verified: boolean
+    error?: string
+}) {
+    const [state, formAction, isPending] = useActionState<LoginState, FormData>(
+        handleLogin,
+        null
+    )
+
     return (
         <div className="min-h-screen bg-stone-950 flex flex-col justify-center items-center px-6 py-12">
             <div className="w-full max-w-md bg-stone-900/80 border border-stone-800 p-8 rounded-2xl shadow-xl backdrop-blur-md">
+
+                {verified && (
+                    <p className="text-xs text-emerald-400 font-mono mb-4">
+                        E-mail confirmado. Agora é só entrar.
+                    </p>
+                )}
+                {error === 'expired_token' && (
+                    <p className="text-xs text-rose-400 font-mono mb-4">
+                        Link expirado ou inválido. Tenta se cadastrar de novo.
+                    </p>
+                )}
 
                 <div className="mb-8 text-center">
                     <h1 className="text-2xl font-serif text-stone-100 font-medium mb-2">Entrar no Griô</h1>
                     <p className="text-xs text-stone-400 font-mono">Acesse suas memórias e timelines colaborativas.</p>
                 </div>
 
-                {/* Botão Google */}
                 <button
                     type="button"
-                    onClick={() => alert('Autenticação Google')}
+                    onClick={() => alert('Autenticação Google ainda não implementada.')}
                     className="w-full mb-6 py-3 px-4 rounded-xl bg-stone-950 border border-stone-800 hover:border-stone-700 text-stone-200 text-sm font-medium flex items-center justify-center gap-3 transition"
                 >
                     <svg className="w-4 h-4" viewBox="0 0 24 24">
@@ -33,11 +56,12 @@ export default function LoginPage() {
                     <div className="flex-grow border-t border-stone-800"></div>
                 </div>
 
-                <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+                <form action={formAction} className="space-y-4">
                     <div>
                         <label className="block text-xs font-mono uppercase tracking-wider text-stone-400 mb-2">E-mail</label>
                         <input
                             type="email"
+                            name="email"
                             placeholder="seu@email.com"
                             className="w-full bg-stone-950 border border-stone-800 rounded-xl px-4 py-3 text-stone-100 text-sm focus:outline-none focus:border-amber-400 transition"
                             required
@@ -48,17 +72,23 @@ export default function LoginPage() {
                         <label className="block text-xs font-mono uppercase tracking-wider text-stone-400 mb-2">Senha</label>
                         <input
                             type="password"
+                            name="password"
                             placeholder="••••••••"
                             className="w-full bg-stone-950 border border-stone-800 rounded-xl px-4 py-3 text-stone-100 text-sm focus:outline-none focus:border-amber-400 transition"
                             required
                         />
                     </div>
 
+                    {state?.status === 'error' && state.message && (
+                        <p className="text-xs text-rose-400 font-mono">{state.message}</p>
+                    )}
+
                     <button
                         type="submit"
-                        className="w-full mt-2 py-3 px-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-stone-950 font-medium text-sm transition font-mono tracking-wide"
+                        disabled={isPending}
+                        className="w-full mt-2 py-3 px-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-stone-950 font-medium text-sm transition font-mono tracking-wide disabled:opacity-50"
                     >
-                        Entrar na Plataforma
+                        {isPending ? 'Entrando...' : 'Entrar na Plataforma'}
                     </button>
                 </form>
 
@@ -68,7 +98,6 @@ export default function LoginPage() {
                         Cadastre-se
                     </Link>
                 </p>
-
             </div>
         </div>
     )

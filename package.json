@@ -13,9 +13,11 @@
     "@prisma/client": "^5.22.0",
     "@types/bcryptjs": "^2.4.6",
     "bcryptjs": "^3.0.3",
+    "jose": "^6.2.12",
     "next": "16.4.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
+    "resend": "^6.32.1",
     "zod": "^4.6.5"
   },
   "devDependencies": {
