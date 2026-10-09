@@ -18,7 +18,7 @@ export default function Home() {
         </section>
       </div>
 
-      <FilmRollGallery />
+      {/* <FilmRollGallery /> */}
     </main>
   )
 }
