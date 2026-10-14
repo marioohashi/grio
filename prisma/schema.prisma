@@ -8,7 +8,6 @@ datasource db {
 }
 
 enum Role {
-  OWNER
   EDITOR
   VIEWER
 }
@@ -19,33 +18,46 @@ enum Visibility {
   SHARED
 }
 
-model User {
-  id            String           @id @default(uuid())
-  name          String
-  email         String           @unique
-  password      String?         
-  emailVerified DateTime?
-  image         String?          
-  created_at    DateTime         @default(now())
-  updated_at    DateTime         @default(now()) @updatedAt // <--- Adicione o @default(now()) aqui
-  timelines     TimelineMember[]
-  memories      Memory[]        
-
-    @@map("users")
- 
+enum Category {
+  RELATIONSHIP
+  FAMILY
+  PET
+  PERSONAL
+  TRAVEL
 }
 
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String    @unique
+  password      String?
+  emailVerified DateTime?
+  image         String?
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+
+  ownedTimelines Timeline[]       @relation("TimelineOwner")
+  memberships    TimelineMember[]
+  memories       Memory[]
+
+  @@map("users")
+}
 
 model Timeline {
-  id          String           @id @default(uuid())
+  id          String     @id @default(uuid())
   title       String
   description String?
-  category    String           // "RELATIONSHIP", "PET", "PERSONAL", "TRAVEL"
-  visibility  Visibility       @default(PRIVATE)
-  members     TimelineMember[]
-  memories    Memory[]
-  created_at  DateTime         @default(now())
+  category    Category
+  visibility  Visibility @default(PRIVATE)
+  owner_id    String
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
 
+  owner    User             @relation("TimelineOwner", fields: [owner_id], references: [id], onDelete: Cascade)
+  members  TimelineMember[]
+  memories Memory[]
+
+  @@index([owner_id])
   @@map("timelines")
 }
 
@@ -54,10 +66,14 @@ model TimelineMember {
   user_id     String
   timeline_id String
   role        Role     @default(VIEWER)
-  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  timeline    Timeline @relation(fields: [timeline_id], references: [id], onDelete: Cascade)
+  created_at  DateTime @default(now())
+
+  user     User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  timeline Timeline @relation(fields: [timeline_id], references: [id], onDelete: Cascade)
 
   @@unique([user_id, timeline_id])
+  @@index([user_id])
+  @@index([timeline_id])
   @@map("timeline_members")
 }
 
@@ -68,19 +84,23 @@ model Memory {
   title       String
   description String?  @db.Text
   date        DateTime
-  media_urls  String[] 
-  mood        String?  
+  media_urls  String[]
+  mood        String?
   tags        String[]
-  location_name     String?   
-  location_address  String?   
-  location_lat      Float?    
-  location_lng      Float?    
-  location_place_id String?   
 
-  timeline    Timeline @relation(fields: [timeline_id], references: [id], onDelete: Cascade)
-  author      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  created_at  DateTime @default(now())
+  location_name     String?
+  location_address  String?
+  location_lat      Float?
+  location_lng      Float?
+  location_place_id String?
 
+  timeline   Timeline @relation(fields: [timeline_id], references: [id], onDelete: Cascade)
+  author     User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  created_at DateTime @default(now())
+
+  @@index([timeline_id])
+  @@index([user_id])
+  @@index([date])
   @@map("memories")
 }
 

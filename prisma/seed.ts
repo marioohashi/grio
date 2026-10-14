@@ -10,10 +10,11 @@ async function main() {
     await prisma.user.deleteMany()
 
     console.log('👤 Creating test user...')
-    const user = await prisma.user.create({
+    const owner = await prisma.user.create({
         data: {
-            email: 'mario@grio.app',
             name: 'Mario Ohashi',
+            email: 'mario@example.com',
+            image: null,
         },
     })
 
@@ -21,22 +22,22 @@ async function main() {
     const timeline = await prisma.timeline.create({
         data: {
             title: 'Expedição Chama Sagrada: Rumo ao Norte',
-            description: 'A multi-state overland backpacking journey and road trip through Brazil.',
+            description:
+                'A multi-state overland backpacking journey and road trip through Brazil.',
             category: 'TRAVEL',
             visibility: 'PUBLIC',
-            members: {
-                create: {
-                    user_id: user.id,
-                    role: 'OWNER',
-                },
-            },
+
+            // ✅ Owner direto — não vai mais em members
+            owner_id: owner.id,
+
             memories: {
                 create: [
                     {
-                        user_id: user.id,
+                        user_id: owner.id,
                         title: 'Start of the Journey in Curitiba',
-                        description: 'Packing the backpack, checking gear, and hitting the road north.',
-                        date: new Date('2025-11-15T08:00:00Z'),
+                        description:
+                            'Packing the backpack, checking gear, and hitting the road north.',
+                        date: new Date('2025-11-15T08:00:00.000Z'),
                         mood: 'EXCITED',
                         tags: ['roadtrip', 'backpacking', 'curitiba'],
                         media_urls: [
@@ -44,10 +45,11 @@ async function main() {
                         ],
                     },
                     {
-                        user_id: user.id,
+                        user_id: owner.id,
                         title: 'Sunset at Chapada dos Veadeiros',
-                        description: 'Breathtaking views after a 12km grueling hike under the sun.',
-                        date: new Date('2025-11-20T18:30:00Z'),
+                        description:
+                            'Breathtaking views after a 12km grueling hike under the sun.',
+                        date: new Date('2025-11-20T18:30:00.000Z'),
                         mood: 'NOSTALGIC',
                         tags: ['hiking', 'nature', 'sunset'],
                         media_urls: [
@@ -59,8 +61,26 @@ async function main() {
         },
     })
 
-    console.log('✅ Seed executed successfully!')
-    console.log({ user: user.name, timeline: timeline.title })
+    // ✨ Opcional — adicione um editor convidado para testar compartilhamento
+    const editor = await prisma.user.create({
+        data: {
+            name: 'Ana Pereira',
+            email: 'ana@example.com',
+        },
+    })
+
+    await prisma.timelineMember.create({
+        data: {
+            user_id: editor.id,
+            timeline_id: timeline.id,
+            role: 'EDITOR', // ✅ apenas EDITOR ou VIEWER agora
+        },
+    })
+
+    console.log(`✅ Seed complete.`)
+    console.log(`   • User (owner): ${owner.email}`)
+    console.log(`   • Timeline: ${timeline.title}`)
+    console.log(`   • Editor convidado: ${editor.email}`)
 }
 
 main()

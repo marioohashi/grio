@@ -33,7 +33,9 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         <LanguageProvider>
           <Topbar user={user} />
-          {children}
+          <div className="pt-20">
+            {children}
+          </div>
           <Footer />
         </LanguageProvider>
       </body>
