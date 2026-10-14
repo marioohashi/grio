@@ -13,26 +13,39 @@ export function Topbar({ user }: { user: SessionUser | null }) {
     return (
         <header className="w-full border-b border-stone-800 bg-stone-950/60 backdrop-blur-md sticky top-0 z-50">
             <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-                <Link
-                    href="/"
-                    onClick={() => {
-                        if (typeof window !== 'undefined') {
-                            history.pushState('', document.title, window.location.pathname)
-                        }
-                    }}
-                    className="flex items-center gap-2 cursor-pointer"
-                >
-                    <span className="font-serif text-4xl tracking-tight text-stone-100 font-medium">
-                        Griô
-                    </span>
-                </Link>
-
+                <div className="flex items-center">
+                    <Link
+                        href="/"
+                        onClick={() => {
+                            if (typeof window !== 'undefined') {
+                                history.pushState('', document.title, window.location.pathname)
+                            }
+                        }}
+                        className="flex items-center gap-2 cursor-pointer"
+                    >
+                        <span className="font-serif text-4xl tracking-tight text-stone-100 font-medium">
+                            Griô
+                        </span>
+                    </Link>
+                </div>
                 <div className="flex items-center gap-4">
                     {user ? (
                         <div className="flex items-center gap-3">
-                            {/* Pill do Usuário / Link para o Dashboard */}
                             <Link
-                                href="/dashboard"
+                                href="/"
+                                className="px-4 py-2 rounded-xl border border-stone-800 bg-stone-900/50 hover:bg-stone-800 text-stone-300 text-xs font-mono transition"
+                            >
+                                Gallery
+                            </Link>
+                            {/* Pill do Usuário / Link para o Dashboard */}
+                            <button
+                                onClick={() => console.log("nova timeline")}
+                                className="px-5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-stone-950 font-mono text-xs font-medium transition cursor-pointer shadow-lg shadow-amber-400/10"
+                            >
+                                New Timeline
+                            </button>
+                            <Link
+                                href="/settings"
                                 className="flex items-center gap-2.5 pl-2 pr-3 py-1.5 rounded-xl bg-stone-900/80 border border-stone-800/80 hover:border-amber-400/40 transition group"
                             >
                                 {user.image ? (
