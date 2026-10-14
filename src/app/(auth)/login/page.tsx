@@ -87,7 +87,7 @@ export default function LoginPage({
                         disabled={isPending}
                         className="w-full mt-2 py-3 px-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-stone-950 font-medium text-sm transition font-mono tracking-wide disabled:opacity-50"
                     >
-                        {isPending ? 'Entrando...' : 'Entrar na Plataforma'}
+                        {isPending ? 'Entrando...' : 'Entrar'}
                     </button>
                 </form>
 

@@ -3,6 +3,12 @@
 import { useRef, useState } from 'react'
 import type { TimelineData } from '@/app/types/timeline'
 import { Memory } from './Memory'
+import { YVYRA, displayFont, bodyFont, monoFont } from '@/lib/yvyra'
+import {
+    GuaraniCross,
+    KaingangDivider,
+    PinhaoSpiral,
+} from '@/app/components/YvyraOrnaments'
 
 interface TimelineProps {
     data: TimelineData
@@ -45,40 +51,72 @@ export function Timeline({ data, showCta = true }: TimelineProps) {
     }
 
     return (
-        <section className="w-full py-16 select-none">
-            {/* Cabeçalho mantido dentro da largura máxima padrão para harmonia visual */}
-            <div className="max-w-7xl mx-auto px-6 mb-10">
+        <section className={`w-full py-16 select-none ${bodyFont.className}`}>
+
+            {/* ============================================================
+                CABEÇALHO DA SEÇÃO
+               ============================================================ */}
+            <div className="max-w-7xl mx-auto px-6 mb-12">
+
+                {/* Eyebrow — Cruz Guarani + badge "Exemplo" */}
                 {isExample && (
-                    <span className="inline-block text-[10px] font-mono uppercase tracking-widest text-amber-400/80 border border-amber-400/20 bg-amber-400/5 rounded-full px-3 py-1 mb-4">
-                        Exemplo de linha do tempo
-                    </span>
+                    <div className="flex items-center gap-3 mb-5">
+                        <GuaraniCross size={22} color={YVYRA.copper} className="opacity-90" />
+                        <span
+                            className={`${monoFont.className} text-[10px] uppercase tracking-[0.3em] px-3 py-1.5 rounded-full`}
+                            style={{
+                                color: YVYRA.amber,
+                                border: `1px solid ${YVYRA.copper}50`,
+                                backgroundColor: `${YVYRA.copper}10`,
+                            }}
+                        >
+                            Exemplo de linha do tempo
+                        </span>
+                    </div>
                 )}
+
                 <div className="max-w-3xl">
-                    <h2 className="text-3xl md:text-4xl font-serif text-stone-100 mb-3 leading-tight">
+                    <h2
+                        className={`${displayFont.className} text-3xl md:text-5xl font-medium tracking-tight mb-4 leading-tight`}
+                        style={{ color: YVYRA.bone }}
+                    >
                         {title}
                     </h2>
-                    <p className="text-stone-400 text-base md:text-lg leading-relaxed">
+                    <p
+                        className={`${bodyFont.className} text-base md:text-lg leading-relaxed`}
+                        style={{ color: YVYRA.fern }}
+                    >
                         {description}
                     </p>
                 </div>
-                <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-mono text-stone-500">
-                    <span><span className="text-stone-300">{memories.length}</span> memórias</span>
+
+                {/* Metadata — linha de instrumento */}
+                <div className={`mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs ${monoFont.className}`}>
+                    <span style={{ color: YVYRA.fern }}>
+                        <span style={{ color: YVYRA.bone }}>{memories.length}</span> memórias
+                    </span>
                     {firstDate && lastDate && (
                         <>
-                            <span className="hidden md:inline">·</span>
-                            <span>{firstDate} <span className="text-stone-600">→</span> {lastDate}</span>
+                            <span style={{ color: YVYRA.lichen }}>·</span>
+                            <span style={{ color: YVYRA.fern }}>
+                                {firstDate}{' '}
+                                <span style={{ color: YVYRA.copper }}>→</span>{' '}
+                                {lastDate}
+                            </span>
                         </>
                     )}
                     {collaboratorCount !== undefined && (
                         <>
-                            <span className="hidden md:inline">·</span>
-                            <span><span className="text-stone-300">{collaboratorCount}</span> colaboradores</span>
+                            <span style={{ color: YVYRA.lichen }}>·</span>
+                            <span style={{ color: YVYRA.fern }}>
+                                <span style={{ color: YVYRA.bone }}>{collaboratorCount}</span> colaboradores
+                            </span>
                         </>
                     )}
                     {visibility && (
                         <>
-                            <span className="hidden md:inline">·</span>
-                            <span className={visibility === 'PRIVATE' ? 'text-emerald-400/80' : ''}>
+                            <span style={{ color: YVYRA.lichen }}>·</span>
+                            <span style={{ color: YVYRA.fern }}>
                                 {visibility === 'PRIVATE' && 'privada'}
                                 {visibility === 'PUBLIC' && 'pública'}
                                 {visibility === 'SHARED' && 'compartilhada'}
@@ -86,9 +124,19 @@ export function Timeline({ data, showCta = true }: TimelineProps) {
                         </>
                     )}
                 </div>
+
+                {/* Divisor Kaingang */}
+                <div className="mt-8">
+                    <KaingangDivider
+                        className="w-full h-3 opacity-25"
+                        color={YVYRA.copper}
+                    />
+                </div>
             </div>
 
-            {/* Container do carrossel ocupando 100% da largura da tela */}
+            {/* ============================================================
+                CARROSSEL — Tronco Horizontal
+               ============================================================ */}
             <div
                 ref={scrollRef}
                 onMouseDown={handleMouseDown}
@@ -99,30 +147,61 @@ export function Timeline({ data, showCta = true }: TimelineProps) {
                 className="overflow-x-auto pb-12 pt-4 cursor-grab active:cursor-grabbing w-full"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
-                {/* W-max e espaçamento lateral adaptativo para fluidez total */}
-                <div className="relative inline-flex items-end gap-6 px-6 md:px-12 w-max">
+                <div className="relative inline-flex items-end gap-8 px-6 md:px-12 w-max">
+
+                    {/* Tronco horizontal — gradiente musgo → cobre */}
                     <div
-                        className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-stone-700 to-transparent"
-                        style={{ top: '18px' }}
+                        aria-hidden
+                        className="absolute left-0 right-0 h-px"
+                        style={{
+                            top: '18px',
+                            background: `linear-gradient(90deg, ${YVYRA.lichen}00 0%, ${YVYRA.copper} 6%, ${YVYRA.copper} 94%, ${YVYRA.lichen}00 100%)`,
+                        }}
                     />
+
+                    {/* Linha Kaingang paralela — grafismo indígena */}
+                    <div
+                        aria-hidden
+                        className="absolute left-0 right-0 h-[2px] opacity-30"
+                        style={{
+                            top: '25px',
+                            backgroundImage: `repeating-linear-gradient(90deg, ${YVYRA.fern} 0, ${YVYRA.fern} 2px, transparent 2px, transparent 8px)`,
+                        }}
+                    />
+
                     {memories.map((memory, index) => (
                         <Memory key={memory.id} memory={memory} index={index} />
                     ))}
                 </div>
             </div>
 
-            {/* Hint + CTA */}
-            <div className="flex justify-center mt-2">
-                <p className="text-[10px] text-stone-400 font-mono">
-                    ← Arraste ou use o scroll para navegar →
+            {/* ============================================================
+                HINT — Pinhão flanqueando o texto
+               ============================================================ */}
+            <div className="flex justify-center items-center gap-3 mt-2">
+                <PinhaoSpiral size={12} color={YVYRA.copper} className="opacity-50" />
+                <p
+                    className={`${monoFont.className} text-[10px] uppercase tracking-[0.3em]`}
+                    style={{ color: YVYRA.fern }}
+                >
+                    Arraste ou use o scroll para navegar
                 </p>
+                <PinhaoSpiral size={12} color={YVYRA.copper} className="opacity-50" />
             </div>
 
+            {/* ============================================================
+                CTA
+               ============================================================ */}
             {showCta && (
-                <div className="max-w-7xl mx-auto px-6 mt-8 flex justify-center">
+                <div className="max-w-7xl mx-auto px-6 mt-10 flex justify-center">
                     <a
                         href="/signup"
-                        className="text-xs font-mono uppercase tracking-widest text-stone-900 bg-amber-400 hover:bg-stone-400 transition px-6 py-3 border border-stone-800 rounded-xl hover:border-amber-400/40"
+                        className={`${monoFont.className} text-[11px] uppercase tracking-[0.25em] px-7 py-4 rounded-xl transition-all duration-300`}
+                        style={{
+                            backgroundColor: YVYRA.amber,
+                            color: YVYRA.bg,
+                            boxShadow: '0 14px 40px -12px rgba(224,168,75,0.45)',
+                        }}
                     >
                         Criar minha própria linha do tempo →
                     </a>

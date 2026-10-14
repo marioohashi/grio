@@ -12,6 +12,8 @@ export default function AnimatedGlow() {
         const ctx = canvas.getContext('2d')
         if (!ctx) return
 
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
         let animationFrameId: number
         let width = (canvas.width = window.innerWidth)
         let height = (canvas.height = window.innerHeight)
@@ -22,7 +24,6 @@ export default function AnimatedGlow() {
         }
         window.addEventListener('resize', handleResize)
 
-        // Mouse alvo (posição real) e mouse suavizado (lerp)
         const targetMouse = { x: width / 2, y: height / 2 }
         const mouse = { x: width / 2, y: height / 2 }
 
@@ -32,27 +33,25 @@ export default function AnimatedGlow() {
         }
         window.addEventListener('mousemove', handleMouseMove)
 
-        // Orbes de luz ambiente
         const orbs = [
-            { x: width * 0.2, y: height * 0.3, radius: 350, color: 'rgba(245, 158, 11, 0.05)', vx: 0.5, vy: 0.3 },
-            { x: width * 0.8, y: height * 0.7, radius: 450, color: 'rgba(120, 53, 15, 0.04)', vx: -0.4, vy: -0.2 },
-            { x: width * 0.5, y: height * 0.5, radius: 500, color: 'rgba(217, 119, 6, 0.03)', vx: 0.3, vy: -0.5 },
+            { x: width * 0.18, y: height * 0.28, radius: 380, color: 'rgba(224,168,75,0.055)', vx: 0.35, vy: 0.22 },
+            { x: width * 0.82, y: height * 0.72, radius: 480, color: 'rgba(199,123,60,0.045)', vx: -0.28, vy: -0.18 },
+            { x: width * 0.5, y: height * 0.5, radius: 540, color: 'rgba(62,86,65,0.060)', vx: 0.22, vy: -0.32 },
+            { x: width * 0.35, y: height * 0.85, radius: 320, color: 'rgba(166,61,47,0.028)', vx: -0.18, vy: 0.24 },
         ]
 
         const render = () => {
-            // Lerp do mouse
             mouse.x += (targetMouse.x - mouse.x) * 0.05
             mouse.y += (targetMouse.y - mouse.y) * 0.05
 
             ctx.clearRect(0, 0, width, height)
 
-            // Orbes
             orbs.forEach((orb) => {
                 orb.x += orb.vx
                 orb.y += orb.vy
 
-                if (orb.x < -100 || orb.x > width + 100) orb.vx *= -1
-                if (orb.y < -100 || orb.y > height + 100) orb.vy *= -1
+                if (orb.x < -150 || orb.x > width + 150) orb.vx *= -1
+                if (orb.y < -150 || orb.y > height + 150) orb.vy *= -1
 
                 const gradient = ctx.createRadialGradient(
                     orb.x, orb.y, 0,
@@ -67,17 +66,18 @@ export default function AnimatedGlow() {
                 ctx.fill()
             })
 
-            // Orbe que segue o mouse
+            // Orbe guiado pelo mouse — cobre do astrolábio
             const mouseGradient = ctx.createRadialGradient(
                 mouse.x, mouse.y, 0,
-                mouse.x, mouse.y, 400
+                mouse.x, mouse.y, 420
             )
-            mouseGradient.addColorStop(0, 'rgba(245, 158, 11, 0.08)')
+            mouseGradient.addColorStop(0, 'rgba(199,123,60,0.075)')
+            mouseGradient.addColorStop(0.5, 'rgba(224,168,75,0.035)')
             mouseGradient.addColorStop(1, 'transparent')
 
             ctx.fillStyle = mouseGradient
             ctx.beginPath()
-            ctx.arc(mouse.x, mouse.y, 400, 0, Math.PI * 2)
+            ctx.arc(mouse.x, mouse.y, 420, 0, Math.PI * 2)
             ctx.fill()
 
             animationFrameId = requestAnimationFrame(render)

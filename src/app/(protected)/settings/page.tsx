@@ -1,6 +1,6 @@
 import { getSession } from '@/lib/session'
 import { redirect } from 'next/navigation'
-import { DashboardContent } from './DashboardContent'
+import { SettingsContent } from './SettingsContent'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,5 +11,5 @@ export default async function DashboardPage() {
         redirect('/login')
     }
 
-    return <DashboardContent user={user} />
+    return <SettingsContent user={user} />
 }
