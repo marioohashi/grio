@@ -80,11 +80,6 @@ export function Topbar({ user }: { user: SessionUser | null }) {
                    ============================================================ */}
                 <Link
                     href="/"
-                    onClick={() => {
-                        if (typeof window !== 'undefined') {
-                            history.pushState('', document.title, window.location.pathname)
-                        }
-                    }}
                     className="flex items-center gap-3 group shrink-0"
                 >
                     <span className="relative w-9 h-9 flex items-center justify-center">
