@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useState } from 'react'
 
 type Language = 'pt' | 'en'
 
@@ -13,35 +13,27 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-    const [lang, setLangState] = useState<Language>('pt')
+    const [lang, setLangState] = useState<Language>(() => {
+        if (typeof window === 'undefined') return 'pt'
 
-    useEffect(() => {
-        // Verifica se já existe preferência salva no navegador
         const savedLang = localStorage.getItem('grio_lang') as Language
         if (savedLang) {
-            setLangState(savedLang)
-            return
+            return savedLang
         }
 
-        // Detecção automática baseada no fuso horário ou idioma do navegador se não houver preferência salva
         const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
         const browserLang = navigator.language || navigator.languages[0]
 
-        // Se estiver no Brasil (fuso de Brasília/América) ou o idioma do browser for pt-BR
         const isBrazil = timezone.includes('America/Sao_Paulo') ||
             timezone.includes('America/Cuiaba') ||
             timezone.includes('America/Manaus') ||
             timezone.includes('America/Belem') ||
             browserLang.startsWith('pt')
 
-        if (isBrazil) {
-            setLangState('pt')
-            localStorage.setItem('grio_lang', 'pt')
-        } else {
-            setLangState('en')
-            localStorage.setItem('grio_lang', 'en')
-        }
-    }, [])
+        const initialLang = isBrazil ? 'pt' : 'en'
+        localStorage.setItem('grio_lang', initialLang)
+        return initialLang
+    })
 
     const setLang = (newLang: Language) => {
         setLangState(newLang)

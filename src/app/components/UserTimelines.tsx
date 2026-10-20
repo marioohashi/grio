@@ -17,8 +17,6 @@ export async function UserTimelines() {
     const user = await getSession()
     if (!user) redirect('/login')
 
-    // ⚠️ Ajuste os nomes dos campos conforme seu schema Prisma
-    // (owner_id, ownerId, userId, etc.)
     const timelines = await db.timeline.findMany({
         where: {
             members: {
